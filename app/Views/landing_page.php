@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sesi 3 | Logika Bisnis Interaktif</title>
+    <title>Sesi 3 | Layanan Wedding Video</title>
     <!-- Bootstrap & Fonts -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
@@ -20,7 +20,7 @@
     <!-- NAVBAR dengan Badge Keranjang Dinamis -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="#"><i class="fa-solid fa-store text-warning"></i> TokoDigital</a>
+            <a class="navbar-brand fw-bold" href="#"><i class="fa-solid fa-video text-warning"></i> Memoria Wedding</a>
             <div class="d-flex align-items-center">
                 <!-- Elemen ini akan diubah isinya oleh JavaScript -->
                 <button class="btn btn-outline-warning position-relative me-3">
@@ -36,8 +36,8 @@
     <!-- HEADER / HERO -->
     <header class="bg-primary text-white text-center py-5">
         <div class="container py-4">
-            <h1 class="display-4 fw-bold">Katalog Produk Otomatis</h1>
-            <p class="lead">Menggunakan JavaScript untuk render data dan menghitung total belanja.</p>
+            <h1 class="display-4 fw-bold">Layanan Wedding Video</h1>
+            <p class="lead">Abadikan momen spesial pernikahan Anda dengan layanan videografi profesional kami.</p>
         </div>
     </header>
 
@@ -46,9 +46,9 @@
         <!-- BAGIAN 1: RENDER PRODUK MENGGUNAKAN LOOP JS -->
         <section class="mb-5">
             <div class="d-flex justify-content-between align-items-end mb-4">
-                <h2>Etalase Produk</h2>
+                <h2>Paket Layanan</h2>
                 <button id="btn-tampilkan-produk" class="btn btn-success">
-                    <i class="fa-solid fa-bolt"></i> Muat Data (JS Loop)
+                    <i class="fa-solid fa-video"></i> Tampilkan Paket
                 </button>
             </div>
             
@@ -56,7 +56,7 @@
             <div id="katalog-container" class="row g-4">
                 <div class="col-12 text-center text-muted py-5" id="pesan-kosong">
                     <i class="fa-solid fa-box-open fa-3x mb-3"></i>
-                    <p>Klik tombol hijau di atas untuk memuat katalog via JavaScript.</p>
+                    <p>Klik tombol di atas untuk melihat pilihan paket wedding video kami.</p>
                 </div>
             </div>
         </section>
@@ -76,7 +76,7 @@
                 
                 <div class="col-md-6 text-end">
                     <div class="input-group mb-3">
-                        <input type="text" id="input-voucher" class="form-control" placeholder="Punya kode voucher? (Coba: DISKON20)">
+                        <input type="text" id="input-voucher" class="form-control" placeholder="Punya kode voucher? (Coba: WEDDING20)">
                         <button class="btn btn-outline-secondary" type="button" id="btn-klaim-voucher">Klaim</button>
                     </div>
                     <!-- Tombol Konversi Utama -->

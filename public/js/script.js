@@ -5,9 +5,24 @@
 // 1. DATABASE SEMENTARA (Simulasi Array Data Produk)
 // Nanti di UAS, data ini akan diambil dari MySQL via CodeIgniter.
 const dataProduk = [
-    { id: 1, nama: "Paket Website Basic", harga: 1500000, icon: "fa-laptop-code" },
-    { id: 2, nama: "Jasa SEO Audit", harga: 800000, icon: "fa-magnifying-glass-chart" },
-    { id: 3, nama: "Manajemen Sosmed", harga: 2500000, icon: "fa-hashtag" }
+  {
+    id: 1,
+    nama: "Paket Silver (Highlight 1 Menit)",
+    harga: 2500000,
+    icon: "fa-video",
+  },
+  {
+    id: 2,
+    nama: "Paket Gold (Cinematic 3 Menit)",
+    harga: 4500000,
+    icon: "fa-film",
+  },
+  {
+    id: 3,
+    nama: "Paket Platinum (Dokumenter & Cinematic)",
+    harga: 7500000,
+    icon: "fa-clapperboard",
+  },
 ];
 
 // STATE APLIKASI (Variabel untuk melacak status transaksi)
@@ -16,105 +31,157 @@ let jumlahItem = 0;
 
 // MENANGKAP ELEMEN HTML (DOM Selection)
 // Ini adalah cara JavaScript mencari elemen di index.html
-const btnTampilkan = document.getElementById('btn-tampilkan-produk');
-const katalogContainer = document.getElementById('katalog-container');
-const displayTotal = document.getElementById('display-total');
-const badgeKeranjang = document.getElementById('cart-badge');
-const btnCheckout = document.getElementById('btn-checkout');
-const promoAlert = document.getElementById('promo-alert');
+const btnTampilkan = document.getElementById("btn-tampilkan-produk");
+const katalogContainer = document.getElementById("katalog-container");
+const displayTotal = document.getElementById("display-total");
+const badgeKeranjang = document.getElementById("cart-badge");
+const btnCheckout = document.getElementById("btn-checkout");
+const promoAlert = document.getElementById("promo-alert");
+const inputVoucher = document.getElementById("input-voucher");
+const btnKlaimVoucher = document.getElementById("btn-klaim-voucher");
 
+let isVoucherApplied = false;
+let diskonVoucher = 0;
 
 // ==========================================
 // TUGAS 1: LOOPS (Otomatisasi Tampilan UI)
 // ==========================================
-btnTampilkan.addEventListener('click', function() {
-    // Menghapus pesan kosong
-    katalogContainer.innerHTML = ''; 
+btnTampilkan.addEventListener("click", function () {
+  // Menghapus pesan kosong
+  katalogContainer.innerHTML = "";
 
-    // TODO MAHASISWA: Gunakan 'for loop' untuk menampilkan dataProduk ke layar.
-    // Petunjuk: Loop dari 0 sampai dataProduk.length
-    
-    for (let i = 0; i < dataProduk.length; i++) {
-        // Membuat elemen HTML untuk setiap produk
-        let produkCard = `
+  // TODO MAHASISWA: Gunakan 'for loop' untuk menampilkan dataProduk ke layar.
+  // Petunjuk: Loop dari 0 sampai dataProduk.length
+
+  for (let i = 0; i < dataProduk.length; i++) {
+    // Membuat elemen HTML untuk setiap produk
+    let produkCard = `
             <div class="col-md-4">
                 <div class="card product-card h-100 p-3 text-center border-primary border-opacity-25">
                     <i class="fa-solid ${dataProduk[i].icon} fa-3x text-primary mb-3 mt-2"></i>
                     <h5 class="card-title fw-bold">${dataProduk[i].nama}</h5>
-                    <p class="card-text text-muted">Rp ${dataProduk[i].harga.toLocaleString('id-ID')}</p>
+                    <p class="card-text text-muted">Rp ${dataProduk[i].harga.toLocaleString("id-ID")}</p>
                     <button class="btn btn-outline-primary w-100" onclick="tambahKeKeranjang(${dataProduk[i].harga})">
                         + Tambah
                     </button>
                 </div>
             </div>
         `;
-        // Menyuntikkan HTML ke dalam container
-        katalogContainer.innerHTML += produkCard;
-    }
+    // Menyuntikkan HTML ke dalam container
+    katalogContainer.innerHTML += produkCard;
+  }
 
-    // Ubah status tombol setelah diklik
-    btnTampilkan.disabled = true;
-    btnTampilkan.innerHTML = '<i class="fa-solid fa-check"></i> Data Dimuat';
+  // Ubah status tombol setelah diklik
+  btnTampilkan.disabled = true;
+  btnTampilkan.innerHTML = '<i class="fa-solid fa-check"></i> Data Dimuat';
 });
-
 
 // ==========================================
 // TUGAS 2: LOGIKA TRANSAKSI (Fungsi Beli)
 // ==========================================
 function tambahKeKeranjang(hargaProduk) {
-    // 1. Update State (Data)
-    totalKeranjang += hargaProduk;
-    jumlahItem += 1;
+  // 1. Update State (Data)
+  totalKeranjang += hargaProduk;
+  jumlahItem += 1;
 
-    // 2. Update UI (DOM Manipulation)
-    badgeKeranjang.textContent = jumlahItem;
-    displayTotal.textContent = 'Rp ' + totalKeranjang.toLocaleString('id-ID');
-    
-    // Aktifkan tombol checkout karena keranjang sudah tidak kosong
-    btnCheckout.classList.remove('disabled');
+  // 2. Update UI (DOM Manipulation)
+  badgeKeranjang.textContent = jumlahItem;
+  displayTotal.textContent = "Rp " + totalKeranjang.toLocaleString("id-ID");
 
-    // Panggil fungsi pengecekan promo
-    cekPromoOtomatis();
+  // Aktifkan tombol checkout karena keranjang sudah tidak kosong
+  btnCheckout.classList.remove("disabled");
+
+  // Panggil fungsi pengecekan promo
+  cekPromoOtomatis();
 }
-
 
 // ==========================================
 // TUGAS 3: CONDITIONALS (Logika Promo Bisnis)
 // ==========================================
 function cekPromoOtomatis() {
-    const teksPromo = document.getElementById('promo-text');
-    
-    // TODO MAHASISWA: Buat logika IF/ELSE. 
-    // Jika totalKeranjang LEBIH DARI Rp 2.000.000, berikan pesan diskon.
-    // Jika tidak, hilangkan pesan diskon/beri pesan upselling.
+  const teksPromo = document.getElementById("promo-text");
 
-    if (totalKeranjang > 2000000) {
-        // Tampilkan peringatan promo
-        promoAlert.classList.remove('d-none');
-        promoAlert.classList.replace('alert-info', 'alert-success');
-        teksPromo.textContent = "Selamat! Anda berhak mendapat Diskon 10% saat Checkout.";
-    } else {
-        // Sembunyikan peringatan jika total turun (opsional untuk keranjang dinamis)
-        // Untuk saat ini, kita beri dorongan upselling
-        promoAlert.classList.remove('d-none');
-        teksPromo.textContent = `Tambah Rp ${(2000000 - totalKeranjang).toLocaleString('id-ID')} lagi untuk dapat Diskon 10%!`;
-    }
+  // TODO MAHASISWA: Buat logika IF/ELSE.
+  // Jika totalKeranjang LEBIH DARI Rp 2.000.000, berikan pesan diskon.
+  // Jika tidak, hilangkan pesan diskon/beri pesan upselling.
+
+  if (totalKeranjang >= 10000000) {
+    // Tampilkan peringatan promo
+    promoAlert.classList.remove("d-none");
+    promoAlert.classList.replace("alert-info", "alert-success");
+    teksPromo.textContent =
+      "Selamat! Anda berhak mendapat Diskon 10% saat Checkout.";
+  } else {
+    // Sembunyikan peringatan jika total turun (opsional untuk keranjang dinamis)
+    // Untuk saat ini, kita beri dorongan upselling
+    promoAlert.classList.remove("d-none");
+    teksPromo.textContent = `Tambah Rp ${(10000000 - totalKeranjang).toLocaleString("id-ID")} lagi untuk dapat Diskon 10%!`;
+  }
 }
-
 
 // ==========================================
 // TUGAS 4: EVENT LISTENER (Titik Konversi Akhir)
 // ==========================================
-btnCheckout.addEventListener('click', function() {
-    // Feedback visual seketika untuk meredakan kecemasan pengguna (DOM Manipulation)
-    btnCheckout.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memproses Pesanan...';
-    btnCheckout.classList.replace('btn-primary', 'btn-success');
+btnCheckout.addEventListener("click", function () {
+  // Feedback visual seketika untuk meredakan kecemasan pengguna (DOM Manipulation)
+  btnCheckout.innerHTML =
+    '<i class="fa-solid fa-spinner fa-spin"></i> Memproses Pesanan...';
+  btnCheckout.classList.replace("btn-primary", "btn-success");
+
+  // Simulasi jeda server (nanti akan diganti dengan request CodeIgniter)
+  setTimeout(() => {
+    let finalTotal = totalKeranjang;
+    let diskonInfo = "";
+    let totalDiskonAmount = 0;
+
+    if (totalKeranjang >= 10000000) {
+      let diskonOtomatis = totalKeranjang * 0.10;
+      totalDiskonAmount += diskonOtomatis;
+      diskonInfo += `\nDiskon Otomatis 10%: -Rp ${diskonOtomatis.toLocaleString("id-ID")}`;
+    }
     
-    // Simulasi jeda server (nanti akan diganti dengan request CodeIgniter)
-    setTimeout(() => {
-        alert(`Transaksi Berhasil!\nTotal Pembayaran: Rp ${totalKeranjang.toLocaleString('id-ID')}\nTerima kasih telah berbelanja.`);
-        
-        // Reset aplikasi setelah transaksi selesai
-        location.reload(); 
-    }, 1500);
+    if (isVoucherApplied) {
+      let nominalDiskonVoucher = totalKeranjang * diskonVoucher;
+      totalDiskonAmount += nominalDiskonVoucher;
+      diskonInfo += `\nVoucher Promo (20%): -Rp ${nominalDiskonVoucher.toLocaleString("id-ID")}`;
+    }
+    
+    finalTotal = totalKeranjang - totalDiskonAmount;
+
+    // Pastikan total tidak negatif
+    if (finalTotal < 0) finalTotal = 0;
+
+    alert(
+      `Transaksi Berhasil!${diskonInfo}\nTotal Pembayaran Akhir: Rp ${finalTotal.toLocaleString("id-ID")}\nTerima kasih telah berbelanja.`
+    );
+
+    // Reset aplikasi setelah transaksi selesai
+    location.reload();
+  }, 1500);
+});
+
+// ==========================================
+// TUGAS 5: LOGIKA VOUCHER DISKON
+// ==========================================
+btnKlaimVoucher.addEventListener("click", function() {
+  const kode = inputVoucher.value.trim().toUpperCase();
+  
+  if (kode === "WEDDING20") {
+      if (!isVoucherApplied) {
+          isVoucherApplied = true;
+          diskonVoucher = 0.20; // Diskon 20%
+          
+          // Update UI
+          inputVoucher.disabled = true;
+          btnKlaimVoucher.disabled = true;
+          btnKlaimVoucher.innerHTML = '<i class="fa-solid fa-check"></i> Diklaim';
+          btnKlaimVoucher.classList.replace('btn-outline-secondary', 'btn-success');
+          
+          alert("Voucher berhasil diklaim! Anda mendapat tambahan diskon 20% untuk transaksi ini.");
+      }
+  } else if (kode === "") {
+      alert("Silakan masukkan kode voucher terlebih dahulu.");
+  } else {
+      alert("Kode voucher tidak valid atau sudah kadaluarsa.");
+  }
 });
